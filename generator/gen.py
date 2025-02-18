@@ -1,0 +1,106 @@
+from vllm import LLM, SamplingParams
+from transformers import AutoTokenizer
+from datasets import load_dataset
+import argparse
+import time
+import json
+import random
+import warnings
+
+
+import warnings
+warnings.filterwarnings("ignore")
+def parse_arguments():
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--model', type=str, default='mistralai/Mistral-7B-v0.1')
+    parser.add_argument('--world_size', type=int, default=4)                                        # controls the number of gpus vLLM is allowed to use
+    parser.add_argument('--seed', type=int, default=0)
+    parser.add_argument('--input_dir', type=str, default='HuggingFaceH4/ultrafeedback_binarized')   # The SFT dataset
+    parser.add_argument('--split', type=str, default='train_sft')
+    parser.add_argument('--revision', type=str, default=None)                                       # model revision
+    parser.add_argument('--chat', action='store_true')                                              # apply chat_template
+    parser.add_argument('--system_message', type=str, default='')                                   # user specific system message, only used when chat_template applied
+    parser.add_argument('--temp', type=float, default=0.7)                      
+    parser.add_argument('--top_p', type=float, default=1.0)
+    parser.add_argument('--top_k', type=int, default=50)
+    parser.add_argument('--max_new_tokens', type=int, default=256)
+    parser.add_argument('--output_prefix', type=str, default="output")
+
+    return parser.parse_args()
+
+def maybe_insert_system_message(messages, tokenizer, sysms = ""):
+    if messages[0]["role"] == "system":
+        return
+    if sysms == "":
+        return
+    messages.insert(0, {"role": "system", "content": sysms})
+
+def process_ultrafeedback_binarized(example):
+    if args.chat:
+        prompt_messages = example['messages'][:1]
+        maybe_insert_system_message(prompt_messages, tokenizer, args.system_message)
+        example['_prompt'] = tokenizer.apply_chat_template(prompt_messages, tokenize=False, add_generation_prompt = True)
+        example['_real'] = example['messages'][1]['content']
+    else:
+        example['_prompt'] = example['prompt']
+        example['_real'] = example['messages'][1]['content']
+    return example
+
+if __name__ == "__main__":
+    args = parse_arguments()
+    model_path = args.model
+    world_size = args.world_size
+    NAME = args.output_prefix
+    TEMP = args.temp
+    TOP_P = args.top_p
+    TOP_K = args.top_k
+    MAX_TOKENS = args.max_new_tokens
+    OUT_NAME = f'{NAME}_{TEMP}_{TOP_P}_{TOP_K}_{MAX_TOKENS}_{args.seed}.json'
+
+    # load a base model and tokenizer
+    tokenizer = AutoTokenizer.from_pretrained(model_path)
+    if tokenizer.chat_template is None:                         # add default chat template
+        tokenizer.chat_template = "{% for message in messages %}\n{% if message['role'] == 'user' %}\n{{ '<|user|>\n' + message['content'] + eos_token }}\n{% elif message['role'] == 'system' %}\n{{ '<|system|>\n' + message['content'] + eos_token }}\n{% elif message['role'] == 'assistant' %}\n{{ '<|assistant|>\n'  + message['content'] + eos_token }}\n{% endif %}\n{% if loop.last and add_generation_prompt %}\n{{ '<|assistant|>' }}\n{% endif %}\n{% endfor %}"
+
+    llm = LLM(
+        model=model_path,
+        tensor_parallel_size=world_size,
+        seed = args.seed,
+        revision = args.revision
+    )
+
+    sampling_params = SamplingParams(temperature=TEMP, top_p=TOP_P, top_k=TOP_K, max_tokens=MAX_TOKENS)
+
+    # load data
+    data = load_dataset(args.input_dir, split=args.split)
+    data = data.map(process_ultrafeedback_binarized)
+
+    prompts_old = data['prompt']
+    prompts_all = data['_prompt']
+    corrects_all = data['_real']
+    for index in random.sample(range(len(prompts_all)), 3):
+        print(prompts_all[index])
+
+    start=time.time()
+
+    #run vllm
+    results_gathered = list(map(lambda x: x.outputs[0].text, 
+                                llm.generate(prompts_all, sampling_params)))
+
+    results = [r.replace(tokenizer.eos_token, "").lstrip() for r in results_gathered]
+
+    timediff=time.time()-start
+    print(f"time elapsed: {timediff}")
+    data = []
+    for idx in range(len(corrects_all)):
+        d = {
+            "prompt": prompts_old[idx],
+            "real": corrects_all[idx],
+            "generated": results[idx],
+            "id": idx
+        }
+        data.append(d)
+
+    with open(OUT_NAME, 'w') as f:
+        json.dump(data, f, indent=4)
