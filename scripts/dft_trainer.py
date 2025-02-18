@@ -1170,7 +1170,6 @@ class DFTTrainer(Trainer):
                 reference_chosen_logps = torch.tensor(batch["reference_chosen_ps"], device = self.accelerator.device)
                 reference_rejected_logps = torch.tensor([seq[st : ed] for seq in batch["reference_rejected_ps"]], device = self.accelerator.device)
             else:
-                raise ValueError("error")
                 with torch.no_grad():
                     if self.ref_model is None:
                         with self.null_ref_context():
