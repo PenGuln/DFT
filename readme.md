@@ -45,9 +45,11 @@ cd dft
 conda env create -f dft.yml
 conda activate dft
 git clone https://github.com/huggingface/alignment-handbook.git
-cd ./alignment-handbook/
+cd alignment-handbook
 git checkout ae3f44fc7d8003d706752ca06f689574dffa3b76
 python -m pip install .
+cd ..
+rm -r alignment-handbook
 ```
 
 ## Training
