@@ -1,4 +1,4 @@
-# Discriminative Finetuning (DFT) of Large Language Models
+# Discriminative Finetuning (DFT)
 
 This repository contains the implementation for the paper "Discriminative Finetuning of Generative Large Language Models without Reward Models and Preference Data".
 
