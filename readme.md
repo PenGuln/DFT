@@ -29,10 +29,17 @@ This repository contains the implementation for the paper "Discriminative Finetu
 
 ### General Language Tasks
 
-| Method              | MMLU  | TruthfulQA | HellaSwag | Winogrande | GSM8k | ARC   | IFEval |
-|---------------------|-------|------------|-----------|------------|-------|-------|--------|
-| Mistral-7B-DFT      | 61.69 | 52.23      | 83.95     | 78.37      | 48.22 | 64.25 | 51.20  |
-| Mistral-7B-DFT2     | 61.66 | 54.14      | 83.20     | 77.82      | 45.49 | 64.42 | 51.20  |
+| Method              | MMLU  | TruthfulQA | HellaSwag | Winogrande | GSM8k | ARC   |
+|---------------------|-------|------------|-----------|------------|-------|-------|
+| Mistral-7B-DFT      | 61.69 | 52.23      | 83.95     | 78.37      | 48.22 | 64.25 | 
+| Mistral-7B-DFT2     | 61.66 | 54.14      | 83.20     | 77.82      | 45.49 | 64.42 | 
+
+### IFEval
+
+| Method              | prompt level strict  | prompt level loose | inst level strict | inst level loose | 
+|---------------------|-------|------------|-----------|------------|
+| Mistral-7B-DFT      | 51.20 | 55.27      | 61.51     | 65.47      |  
+| Mistral-7B-DFT2     | 51.20 | 55.08      | 61.39     | 65.59      |
 
 ## Install Dependencies
 
