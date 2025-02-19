@@ -39,7 +39,7 @@ This repository contains the implementation for the paper "Discriminative Finetu
 ```bash
 # Clone the repository
 git clone https://github.com/PenGuln/DFT.git
-cd dft
+cd DFT
 
 # Install dependencies
 conda env create -f dft.yml
