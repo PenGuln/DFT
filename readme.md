@@ -138,7 +138,7 @@ bash generator/gen_uf.sh
 To replicate our MetaMath self-play datasets:
 
 ```bash
-bash generator/gen_mm.sh
+bash generator/gen_mmqa.sh
 ```
 
 ## Evaluation

@@ -47,6 +47,12 @@ def process_ultrafeedback_binarized(example):
         example['_real'] = example['messages'][1]['content']
     return example
 
+def process_metamathqa(example):
+    example['prompt'] = example['query']
+    example['_prompt'] = "### Question: " + example['query'] + "\n\n### Response: "
+    example['_real'] = example['response']
+    return example
+
 if __name__ == "__main__":
     args = parse_arguments()
     model_path = args.model
@@ -74,7 +80,10 @@ if __name__ == "__main__":
 
     # load data
     data = load_dataset(args.input_dir, split=args.split)
-    data = data.map(process_ultrafeedback_binarized)
+    if args.input_dir == 'meta-math/MetaMathQA':
+        data = data.map(process_metamathqa)
+    else:
+        data = data.map(process_ultrafeedback_binarized)
 
     prompts_old = data['prompt']
     prompts_all = data['_prompt']
