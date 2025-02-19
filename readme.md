@@ -57,36 +57,21 @@ rm -r alignment-handbook
 DFT:
 
 ```bash
-accelerate launch --config_file recipes/accelerate_configs/deepspeed_zero3.yaml scripts/run_dft.py recipes/dft/mistral_base.yaml \
-    --learning_rate=2e-6 \
-    --tau=1.0 \
-    --u_init=0 \
-    --output_dir=./ckpts/dft \
-    --samples_per_prompt=2 \
-    --gamma=0.85 \
-    --ref_free=false
+accelerate launch --config_file recipes/accelerate_configs/deepspeed_zero3.yaml scripts/run_dft.py recipes/dft/mistral_base_dft.yaml
 ```
 
 DFT2:
 
 ```bash
-accelerate launch --main_process_port 29507 --config_file recipes/accelerate_configs/deepspeed_zero3.yaml scripts/run_dft.py recipes/dft/mistral_base.yaml \
-    --learning_rate=2e-6 \
-    --tau=0.3 \
-    --u_init=0 \
-    --output_dir=./ckpts/dft2 \
-    --samples_per_prompt=2 \
-    --gamma=0.9 \
-    --ref_free=true
+accelerate launch --config_file recipes/accelerate_configs/deepspeed_zero3.yaml scripts/run_dft.py recipes/dft/mistral_base_dft2.yaml
 ```
 
 For scenarios with limited GPU memory, we provide an option to precompute log probabilities for the reference model. This allows training without keeping the reference model in memory.
 
 To use this feature, run the training script with `--precompute_offline_ref_log_probs` enabled:
 ```bash
-accelerate launch --config_file recipes/accelerate_configs/deepspeed_zero3.yaml scripts/run_dft.py recipes/dft/mistral_base.yaml \
+accelerate launch --config_file recipes/accelerate_configs/deepspeed_zero3.yaml scripts/run_dft.py recipes/dft/mistral_base_dft.yaml \
     --output_dir=./ckpts/dft \
-    --samples_per_prompt=2 \
     --precompute_offline_ref_log_probs=true \
     --save_strategy=no
 ```
@@ -94,14 +79,7 @@ accelerate launch --config_file recipes/accelerate_configs/deepspeed_zero3.yaml 
 This will create a `logps.pt` file in your output directory. Next, load the `logps.pt` file for reference using `--probs_dir` argument:
 
 ```bash
-accelerate launch --config_file recipes/accelerate_configs/deepspeed_zero3.yaml scripts/run_dft.py recipes/dft/mistral_base.yaml \
-    --learning_rate=2e-6 \
-    --tau=1.0 \
-    --u_init=0 \
-    --output_dir=./ckpts/dft \
-    --samples_per_prompt=2 \
-    --gamma=0.85 \
-    --ref_free=false \
+accelerate launch --config_file recipes/accelerate_configs/deepspeed_zero3.yaml scripts/run_dft.py recipes/dft/mistral_base_dft.yaml \
     --probs_dir=./ckpts/dft/logps.pt
 ```
 
