@@ -38,7 +38,7 @@ This repository contains the implementation for the paper "Discriminative Finetu
 
 ```bash
 # Clone the repository
-git clone https://github.com/username/dft.git
+git clone https://github.com/PenGuln/DFT.git
 cd dft
 
 # Install dependencies
