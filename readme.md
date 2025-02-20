@@ -29,12 +29,20 @@ This repository contains the implementation for the paper "Discriminative Finetu
 
 ### General Language Tasks
 
-| Method              | MMLU  | TruthfulQA | HellaSwag | Winogrande | GSM8k | ARC   |
-|---------------------|-------|------------|-----------|------------|-------|-------|
-| Mistral-7B-DFT      | 61.69 | 52.23      | 83.95     | 78.37      | 48.22 | 64.25 | 
-| Mistral-7B-DFT2     | 61.66 | 54.14      | 83.20     | 77.82      | 45.49 | 64.42 | 
+All models are trained on the SFT split of [HuggingFaceH4/ultrafeedback_binarized](https://huggingface.co/datasets/HuggingFaceH4/ultrafeedback_binarized), i.e., regarding the winning responses $\mathbf{y}_w$ as the ground-truth and discard all losing responses $\mathbf{y}_l$. All models use [mistralai/Mistral-7B-v0.1](https://huggingface.co/mistralai/Mistral-7B-v0.1) as the base model. The generated negative samples $\mathbf{y}'$ can be found at [siqi00/mistral_ultrafeedback_unhelpful_chatprompt_0.7_1.0_50_320](https://huggingface.co/datasets/siqi00/mistral_ultrafeedback_unhelpful_chatprompt_0.7_1.0_50_320).
 
-### IFEval
+| Method | MMLU | TruthfulQA | HellaSwag | Winogrande | GSM8k | ARC | IFEval | Avg. |
+|--------|-------|------------|-----------|------------|--------|-----|---------|-------|
+| SFT | 62.18 | 50.04 | 83.59 | 78.06 | 45.26 | 63.65 | 49.72 | 61.79 |
+| SPIN | 61.99 | 49.91 | 83.75 | 77.90 | 46.02 | 61.95 | 23.11 | 57.80 |
+| SimPO | 62.39 | 52.08 | 83.89 | 78.14 | 2.58 | 61.86 | 18.85 | 51.40 |
+| SimPO-SFT | 62.28 | 49.59 | 83.46 | 77.90 | 42.53 | 61.52 | 43.62 | 60.13 |
+| KTO | 61.59 | 49.32 | 82.88 | 79.24 | 43.97 | 61.60 | 38.08 | 59.53 |
+| DFT | 61.69 | 52.23 | 83.95 | 78.37 | 48.22 | 64.25 | 51.20 | 62.84 |
+| DFT2 | 61.66 | 54.14 | 83.20 | 77.82 | 45.49 | 64.42 | 51.20 | 62.56 |
+
+
+### Detailed IFEval Performance
 
 | Method              | prompt level strict  | prompt level loose | inst level strict | inst level loose | 
 |---------------------|-------|------------|-----------|------------|
