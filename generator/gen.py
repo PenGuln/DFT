@@ -94,6 +94,8 @@ if __name__ == "__main__":
     data = load_dataset(args.input_dir, split=args.split)
     if args.input_dir == 'meta-math/MetaMathQA':
         data = data.map(process_metamathqa)
+    elif args.input_dir == 'argilla/ultrafeedback-binarized-preferences-cleaned':
+        data = data.map(process_ultrafeedback_binarized_cleaned)
     else:
         data = data.map(process_ultrafeedback_binarized)
 
