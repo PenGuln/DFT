@@ -38,20 +38,31 @@ def maybe_insert_system_message(messages, tokenizer, sysms = ""):
     messages.insert(0, {"role": "system", "content": sysms})
 
 def process_ultrafeedback_binarized(example):
+    example['prompt'] = example['messages'][0]['content']
+    example['real'] = example['messages'][1]['content']
     if args.chat:
         prompt_messages = example['messages'][:1]
         maybe_insert_system_message(prompt_messages, tokenizer, args.system_message)
         example['_prompt'] = tokenizer.apply_chat_template(prompt_messages, tokenize=False, add_generation_prompt = True)
-        example['_real'] = example['messages'][1]['content']
     else:
         example['_prompt'] = example['prompt']
-        example['_real'] = example['messages'][1]['content']
     return example
 
 def process_metamathqa(example):
     example['prompt'] = example['query']
     example['_prompt'] = "### Question: " + example['query'] + "\n\n### Response: "
-    example['_real'] = example['response']
+    example['real'] = example['response']
+    return example
+
+def process_ultrafeedback_binarized_cleaned(example):
+    example['prompt'] = example['chosen'][0]['content']
+    example['real'] = example['chosen'][1]['content']
+    if args.chat:
+        prompt_messages = example['chosen'][:1]
+        maybe_insert_system_message(prompt_messages, tokenizer, args.system_message)
+        example['_prompt'] = tokenizer.apply_chat_template(prompt_messages, tokenize=False, add_generation_prompt = True)
+    else:
+        example['_prompt'] = example['prompt']
     return example
 
 if __name__ == "__main__":
@@ -88,7 +99,7 @@ if __name__ == "__main__":
 
     prompts_old = data['prompt']
     prompts_all = data['_prompt']
-    corrects_all = data['_real']
+    corrects_all = data['real']
     for index in random.sample(range(len(prompts_all)), 3):
         print(prompts_all[index])
 
