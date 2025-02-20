@@ -123,5 +123,6 @@ if __name__ == "__main__":
         }
         data.append(d)
 
+    os.makedirs(BASE_DIR, exist_ok=True)
     with open(os.path.join(BASE_DIR, OUT_NAME), 'w') as f:
         json.dump(data, f, indent=4)
