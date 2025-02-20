@@ -6,7 +6,8 @@ import time
 import json
 import random
 import warnings
-
+import os
+BASE_DIR = './data'
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -111,5 +112,5 @@ if __name__ == "__main__":
         }
         data.append(d)
 
-    with open(OUT_NAME, 'w') as f:
+    with open(os.path.join(BASE_DIR, OUT_NAME), 'w') as f:
         json.dump(data, f, indent=4)
