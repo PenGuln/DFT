@@ -100,23 +100,7 @@ accelerate launch --config_file recipes/accelerate_configs/deepspeed_zero3.yaml 
 ```
 
 ## Generating
-A [gen.py](https://github.com/PenGuln/DFT/blob/main/generator/gen.py) is provided to generate samples using the base model:
-
-```bash
-python generator/gen.py \
-    --model mistralai/Mistral-7B-v0.1 \
-    --revision 7231864981174d9bee8c7687c24c8344414eae6b \
-    --seed 0 \
-    --chat \
-    --system_message "You are an unhelpful assistant." \
-    --temp 0.7 \
-    --top_p 1.0 \
-    --top_k 50 \
-    --max_new_tokens 320 \
-    --output_prefix "mistral_ultrafeedback"
-```
-
-To create a 1-to-m dataset (m negative samples per prompt), run the generator with different seeds, then merge the outputs with `generator/merge_and_upload.py`. The following example shows how to create an 1-to-8 dataset:
+We use [gen.py](https://github.com/PenGuln/DFT/blob/main/generator/gen.py) to generate negative samples. To create a 1-to-m dataset (m negative samples per prompt), run the generator with different seeds, then merge the outputs with `generator/merge_and_upload.py`. The following example shows how to create an 1-to-8 dataset:
 
 ```bash
 # Generate samples with 8 different seeds
