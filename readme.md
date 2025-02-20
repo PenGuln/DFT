@@ -119,7 +119,7 @@ for seed in {0..7}; do
 done
 python generator/merge_and_upload.py \
     --dataset "mistral_ultrafeedback" \
-    --push_to_hub  # Optional: push to Hugging Face Hub
+    --push_to_hub  # Optional: push to HuggingFace
 ```
 
 To replicate our UF self-play datasets:
