@@ -50,22 +50,30 @@ All models are trained on the SFT split of [HuggingFaceH4/ultrafeedback_binarize
 | Mistral-7B-DFT      | 51.20 | 55.27      | 61.51     | 65.47      |  
 | Mistral-7B-DFT2     | 51.20 | 55.08      | 61.39     | 65.59      |
 
-## Install Dependencies
+## Installation
 
 ```bash
 # Clone the repository
 git clone https://github.com/PenGuln/DFT.git
 cd DFT
-
-# Install dependencies
 conda env create -f dft.yml
 conda activate dft
+```
+
+Next, install alignment-handbook:
+```bash
 git clone https://github.com/huggingface/alignment-handbook.git
 cd alignment-handbook
 git checkout ae3f44fc7d8003d706752ca06f689574dffa3b76
 python -m pip install .
 cd ..
 rm -r alignment-handbook
+```
+
+Finally, log into your Hugging Face and Weights and Biases accounts as follows:
+```bash
+huggingface-cli login
+wandb login
 ```
 
 ## Training
@@ -119,7 +127,7 @@ for seed in {0..7}; do
 done
 python generator/merge_and_upload.py \
     --dataset "mistral_ultrafeedback" \
-    --push_to_hub  # Optional: push to HuggingFace
+    --push_to_hub  # Optional: push to Hugging Face
 ```
 
 To replicate our UF self-play datasets:
