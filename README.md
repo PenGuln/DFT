@@ -5,10 +5,10 @@ This repository contains the implementation for the paper "Discriminative Finetu
 
 ## Model Checkpoints
 
-- Mistral-7B-DFT - [siqi00/Mistral-7B-DFT](https://huggingface.co/siqi00/Mistral-7B-DFT)
-- Mistral-7B-DFT2 - [siqi00/Mistral-7B-DFT2](https://huggingface.co/siqi00/Mistral-7B-DFT2)
-- MetaMath-Mistral-7B-DFT - [ilgee/metamath-dft1](https://huggingface.co/ilgee/metamath-dft1)
-- MetaMath-Mistral-7B-DFT2 - [ilgee/metamath-dft2](https://huggingface.co/ilgee/metamath-dft2)
+- DFT-Mistral-7B - [siqi00/Mistral-7B-DFT](https://huggingface.co/siqi00/Mistral-7B-DFT)
+- DFT2-Mistral-7B - [siqi00/Mistral-7B-DFT2](https://huggingface.co/siqi00/Mistral-7B-DFT2)
+- DFT-MetaMath-Mistral-7B - [ilgee/metamath-dft1](https://huggingface.co/ilgee/metamath-dft1)
+- DFT2-MetaMath-Mistral-7B - [ilgee/metamath-dft2](https://huggingface.co/ilgee/metamath-dft2)
 
 ## Performance
 
