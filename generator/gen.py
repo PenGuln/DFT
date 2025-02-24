@@ -18,7 +18,7 @@ def parse_arguments():
     parser.add_argument('--split', type=str, default='train_sft')
     parser.add_argument('--revision', type=str, default=None)                                       # model revision
     parser.add_argument('--chat', action='store_true')                                              # apply chat_template
-    parser.add_argument('--system_message', type=str, default='')                                   # user specific system message, only used when chat_template applied
+    parser.add_argument('--system_message', type=str, default=None)                                   # user specific system message, only used when chat_template applied
     parser.add_argument('--temp', type=float, default=0.7)                      
     parser.add_argument('--top_p', type=float, default=1.0)
     parser.add_argument('--top_k', type=int, default=50)
@@ -27,12 +27,11 @@ def parse_arguments():
     parser.add_argument('--compute_len', action='store_true')
     return parser.parse_args()
 
-def maybe_insert_system_message(messages, tokenizer, sysms = ""):
+def maybe_insert_system_message(messages, tokenizer, sysms):
     if messages[0]["role"] == "system":
         return
-    if sysms == "":
-        return
-    messages.insert(0, {"role": "system", "content": sysms})
+    if sysms:
+        messages.insert(0, {"role": "system", "content": sysms})
 
 def process_length(example):
     ids = tokenizer.encode(example["real"], add_special_tokens=False)
@@ -63,6 +62,18 @@ def process_ultrafeedback_binarized_cleaned(example):
         prompt_messages = example['chosen'][:1]
         maybe_insert_system_message(prompt_messages, tokenizer, args.system_message)
         example['_prompt'] = tokenizer.apply_chat_template(prompt_messages, tokenize=False, add_generation_prompt = True)
+    else:
+        example['_prompt'] = example['prompt']
+    return example
+
+def process_open_thoughts(example):
+    example["prompt"] = example['conversations'][0]["value"]
+    example["real"] = example['conversations'][1]["value"]
+    system = example['system']
+    if args.chat:
+        prompt_messages = [{"role" : "user", "content" : example["prompt"]}]
+        maybe_insert_system_message(prompt_messages, tokenizer, system)
+        example["_prompt"] = tokenizer.apply_chat_template(prompt_messages, tokenize=False, add_generation_prompt = True)
     else:
         example['_prompt'] = example['prompt']
     return example
@@ -99,6 +110,8 @@ if __name__ == "__main__":
         data = data.map(process_metamathqa)
     elif args.input_dir == 'argilla/ultrafeedback-binarized-preferences-cleaned':
         data = data.map(process_ultrafeedback_binarized_cleaned)
+    elif args.input_dir == 'open-thoughts/OpenThoughts-114k':
+        data = data.map(process_open_thoughts)
     else:
         data = data.map(process_default)
     

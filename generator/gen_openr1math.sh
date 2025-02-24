@@ -1,0 +1,21 @@
+(
+    CUDA_VISIBLE_DEVICES=0 nohup python3 generator/gen.py --model Qwen/Qwen2.5-Math-7B-Instruct --revision ef9926d75ab1d54532f6a30dd5e760355eb9aa4d --input_dir open-r1/OpenR1-Math-220k --split train --world_size 1 --chat --seed 0  --temp 0.7 --top_p 1.0 --top_k -1 --max_new_tokens 8192 --output_prefix qwen_openr1math > gen0.log 2>&1 ;
+    CUDA_VISIBLE_DEVICES=0 nohup python3 generator/gen.py --model Qwen/Qwen2.5-Math-7B-Instruct --revision ef9926d75ab1d54532f6a30dd5e760355eb9aa4d --input_dir open-r1/OpenR1-Math-220k --split train --world_size 1 --chat --seed 1  --temp 0.7 --top_p 1.0 --top_k -1 --max_new_tokens 8192 --output_prefix qwen_openr1math > gen1.log 2>&1 ;
+    CUDA_VISIBLE_DEVICES=0 nohup python3 generator/gen.py --model Qwen/Qwen2.5-Math-7B-Instruct --revision ef9926d75ab1d54532f6a30dd5e760355eb9aa4d --input_dir open-r1/OpenR1-Math-220k --split train --world_size 1 --chat --seed 2  --temp 0.7 --top_p 1.0 --top_k -1 --max_new_tokens 8192 --output_prefix qwen_openr1math > gen2.log 2>&1
+) &
+(
+    CUDA_VISIBLE_DEVICES=1 nohup python3 generator/gen.py --model Qwen/Qwen2.5-Math-7B-Instruct --revision ef9926d75ab1d54532f6a30dd5e760355eb9aa4d --input_dir open-r1/OpenR1-Math-220k --split train --world_size 1 --chat --seed 3  --temp 0.7 --top_p 1.0 --top_k -1 --max_new_tokens 8192 --output_prefix qwen_openr1math > gen3.log 2>&1 ;
+    CUDA_VISIBLE_DEVICES=1 nohup python3 generator/gen.py --model Qwen/Qwen2.5-Math-7B-Instruct --revision ef9926d75ab1d54532f6a30dd5e760355eb9aa4d --input_dir open-r1/OpenR1-Math-220k --split train --world_size 1 --chat --seed 4  --temp 0.7 --top_p 1.0 --top_k -1 --max_new_tokens 8192 --output_prefix qwen_openr1math > gen4.log 2>&1 ;
+    CUDA_VISIBLE_DEVICES=1 nohup python3 generator/gen.py --model Qwen/Qwen2.5-Math-7B-Instruct --revision ef9926d75ab1d54532f6a30dd5e760355eb9aa4d --input_dir open-r1/OpenR1-Math-220k --split train --world_size 1 --chat --seed 5  --temp 0.7 --top_p 1.0 --top_k -1 --max_new_tokens 8192 --output_prefix qwen_openr1math > gen5.log 2>&1
+) &
+(
+    CUDA_VISIBLE_DEVICES=2 nohup python3 generator/gen.py --model Qwen/Qwen2.5-Math-7B-Instruct --revision ef9926d75ab1d54532f6a30dd5e760355eb9aa4d --input_dir open-r1/OpenR1-Math-220k --split train --world_size 1 --chat --seed 6  --temp 0.7 --top_p 1.0 --top_k -1 --max_new_tokens 8192 --output_prefix qwen_openr1math > gen6.log 2>&1 ;
+    CUDA_VISIBLE_DEVICES=2 nohup python3 generator/gen.py --model Qwen/Qwen2.5-Math-7B-Instruct --revision ef9926d75ab1d54532f6a30dd5e760355eb9aa4d --input_dir open-r1/OpenR1-Math-220k --split train --world_size 1 --chat --seed 7  --temp 0.7 --top_p 1.0 --top_k -1 --max_new_tokens 8192 --output_prefix qwen_openr1math > gen7.log 2>&1 ;
+    CUDA_VISIBLE_DEVICES=2 nohup python3 generator/gen.py --model Qwen/Qwen2.5-Math-7B-Instruct --revision ef9926d75ab1d54532f6a30dd5e760355eb9aa4d --input_dir open-r1/OpenR1-Math-220k --split train --world_size 1 --chat --seed 8  --temp 0.7 --top_p 1.0 --top_k -1 --max_new_tokens 8192 --output_prefix qwen_openr1math > gen8.log 2>&1
+) &
+(
+    CUDA_VISIBLE_DEVICES=3 nohup python3 generator/gen.py --model Qwen/Qwen2.5-Math-7B-Instruct --revision ef9926d75ab1d54532f6a30dd5e760355eb9aa4d --input_dir open-r1/OpenR1-Math-220k --split train --world_size 1 --chat --seed 9  --temp 0.7 --top_p 1.0 --top_k -1 --max_new_tokens 8192 --output_prefix qwen_openr1math > gen9.log 2>&1 ;
+    CUDA_VISIBLE_DEVICES=3 nohup python3 generator/gen.py --model Qwen/Qwen2.5-Math-7B-Instruct --revision ef9926d75ab1d54532f6a30dd5e760355eb9aa4d --input_dir open-r1/OpenR1-Math-220k --split train --world_size 1 --chat --seed 10 --temp 0.7 --top_p 1.0 --top_k -1 --max_new_tokens 8192 --output_prefix qwen_openr1math > gen10.log 2>&1 ;
+    CUDA_VISIBLE_DEVICES=3 nohup python3 generator/gen.py --model Qwen/Qwen2.5-Math-7B-Instruct --revision ef9926d75ab1d54532f6a30dd5e760355eb9aa4d --input_dir open-r1/OpenR1-Math-220k --split train --world_size 1 --chat --seed 11 --temp 0.7 --top_p 1.0 --top_k -1 --max_new_tokens 8192 --output_prefix qwen_openr1math > gen11.log 2>&1
+) &
+wait
