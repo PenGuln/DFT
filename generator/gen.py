@@ -8,9 +8,6 @@ import random
 import warnings
 import os
 BASE_DIR = './data'
-
-import warnings
-warnings.filterwarnings("ignore")
 def parse_arguments():
     """Parse command line arguments."""
     parser = argparse.ArgumentParser()
@@ -84,6 +81,7 @@ if __name__ == "__main__":
     # load a base model and tokenizer
     tokenizer = AutoTokenizer.from_pretrained(model_path)
     if tokenizer.chat_template is None:                         # add default chat template
+        warnings.warn("No chat_template found, using default chat_template.")
         tokenizer.chat_template = "{% for message in messages %}\n{% if message['role'] == 'user' %}\n{{ '<|user|>\n' + message['content'] + eos_token }}\n{% elif message['role'] == 'system' %}\n{{ '<|system|>\n' + message['content'] + eos_token }}\n{% elif message['role'] == 'assistant' %}\n{{ '<|assistant|>\n'  + message['content'] + eos_token }}\n{% endif %}\n{% if loop.last and add_generation_prompt %}\n{{ '<|assistant|>' }}\n{% endif %}\n{% endfor %}"
 
     llm = LLM(
