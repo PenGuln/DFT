@@ -27,7 +27,7 @@ def parse_arguments():
     parser.add_argument('--top_k', type=int, default=50)
     parser.add_argument('--max_new_tokens', type=int, default=256)
     parser.add_argument('--output_prefix', type=str, default="output")
-
+    parser.add_argument('--compute_len', action='store_true')
     return parser.parse_args()
 
 def maybe_insert_system_message(messages, tokenizer, sysms = ""):
@@ -37,7 +37,12 @@ def maybe_insert_system_message(messages, tokenizer, sysms = ""):
         return
     messages.insert(0, {"role": "system", "content": sysms})
 
-def process_ultrafeedback_binarized(example):
+def process_length(example):
+    ids = tokenizer.encode(example["real"], add_special_tokens=False)
+    example["len"] = len(ids)
+    return example
+
+def process_default(example):
     example['prompt'] = example['messages'][0]['content']
     example['real'] = example['messages'][1]['content']
     if args.chat:
@@ -97,7 +102,11 @@ if __name__ == "__main__":
     elif args.input_dir == 'argilla/ultrafeedback-binarized-preferences-cleaned':
         data = data.map(process_ultrafeedback_binarized_cleaned)
     else:
-        data = data.map(process_ultrafeedback_binarized)
+        data = data.map(process_default)
+    
+    if args.compute_len:
+        data = data.map(process_length)
+        print("Avg Length: ", sum(data["len"]) / len(data["len"]))
 
     prompts_old = data['prompt']
     prompts_all = data['_prompt']
