@@ -50,8 +50,13 @@ def process_default(example):
     return example
 
 def process_metamathqa(example):
+    problem_prompt = (
+        "Below is an instruction that describes a task. "
+        "Write a response that appropriately completes the request.\n\n"
+        "### Instruction:\n{instruction}\n\n### Response:"
+    )
     example['prompt'] = example['query']
-    example['_prompt'] = "### Question: " + example['query'] + "\n\n### Response: "
+    example['_prompt'] = problem_prompt.format(instruction = example['query'])
     example['real'] = example['response']
     return example
 
