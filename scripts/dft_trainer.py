@@ -708,6 +708,17 @@ class DFTTrainer(Trainer):
                 "processor": self.processor if self.is_vision_model else None,
                 "model": model if self.is_encoder_decoder else None,
             }
+
+            from datasets.fingerprint import format_kwargs_for_fingerprint, format_transform_for_fingerprint, update_fingerprint
+            from dataclasses import asdict
+            kwargs_for_fingerprint = format_kwargs_for_fingerprint(Dataset._map_single, (), {
+                "shard": train_dataset,
+                "fn_kwargs": {**fn_kwargs, "args" : {k : v for k, v in asdict(args).items() if k != "local_rank"} },
+                "batched" : True,
+                "writer_batch_size" : 10,
+            })
+            new_fingerprint = update_fingerprint(train_dataset._fingerprint, format_transform_for_fingerprint(Dataset._map_single), kwargs_for_fingerprint)
+
             train_dataset = train_dataset.map(
                 _tokenize,
                 fn_kwargs=fn_kwargs,
@@ -715,6 +726,7 @@ class DFTTrainer(Trainer):
                 num_proc=self.dataset_num_proc,
                 writer_batch_size=10,
                 desc="Tokenizing train dataset",
+                new_fingerprint=new_fingerprint
             )
             
             if eval_dataset is not None:
