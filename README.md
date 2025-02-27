@@ -152,11 +152,14 @@ pip install alpaca_eval==0.6.2
 
 ## Citation
 
-<!-- ```bibtex
-@article{guo2025discriminative,
-  title={Discriminative Finetuning of Generative Large Language Models without Reward Models and Preference Data},
-  author={Guo, Siqi and Hong, Ilgee and Balmaseda, Vicente and Zhao, Tuo and Yang, Tianbao},
-  journal={Preprint},
-  year={2025}
+```bibtex
+@misc{guo2025discriminativefinetuninggenerativelarge,
+      title={Discriminative Finetuning of Generative Large Language Models without Reward Models and Preference Data}, 
+      author={Siqi Guo and Ilgee Hong and Vicente Balmaseda and Tuo Zhao and Tianbao Yang},
+      year={2025},
+      eprint={2502.18679},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2502.18679}, 
 }
-``` -->
+```
