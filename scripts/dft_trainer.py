@@ -30,6 +30,7 @@ from transformers.trainer_utils import EvalLoopOutput
 from transformers.utils import is_peft_available
 import math
 import re
+from scheduler import GammaScheduler
 
 from trl.models import PreTrainedModelWrapper, create_reference_model
 from dft_config import DFTConfig
@@ -756,6 +757,10 @@ class DFTTrainer(Trainer):
         # sogclr parameters
         self.u = torch.ones(len(train_dataset), device=self.accelerator.device) * self.u_init
         self.u_mask = torch.zeros(len(train_dataset), device=self.accelerator.device)
+        num_update_steps_per_epoch = max(len(train_dataset) // (args.gradient_accumulation_steps * args.train_batch_size * self.accelerator.state.num_processes) , 1)
+        max_steps = math.ceil(args.num_train_epochs * num_update_steps_per_epoch)
+        print("MAX_STEPS: ", max_steps)
+        self.gamma_scheduler = GammaScheduler(args.gamma, max_steps // 2)
 
         # only compute reference logps
         if self.precompute_offline_ref_log_probs:
