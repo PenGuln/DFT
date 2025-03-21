@@ -696,7 +696,7 @@ class DFTTrainer(Trainer):
         self.dataset_num_proc = args.dataset_num_proc
         self.tau = args.tau
         self.u_init = args.u_init
-        self.gamma = args.gamma
+        # self.gamma = args.gamma
         self.samples_per_prompt = args.samples_per_prompt
         self.eps = 1e-8
         # Compute that only on the main process for faster data processing.
@@ -948,6 +948,7 @@ class DFTTrainer(Trainer):
         
         b = diff_generated.max(dim = 1).values
         weight = torch.exp(diff_generated - b[:, None]).detach()
+        self.gamma = self.gamma_scheduler.step()
         w = math.log(self.gamma) + torch.log(weight.mean(dim = 1)) + b
         if self.gamma == 1:
             u = w
@@ -987,6 +988,7 @@ class DFTTrainer(Trainer):
 
         b = diff_generated.max(dim = 1).values
         weight = torch.exp(diff_generated - b[:, None]).detach()
+        self.gamma = self.gamma_scheduler.step()
         w = math.log(self.gamma) + torch.log(weight.mean(dim = 1)) + b
         if self.gamma == 1:
             u = w
@@ -1220,6 +1222,7 @@ class DFTTrainer(Trainer):
         metrics[f"{prefix}logps/chosen"] = policy_chosen_logps.detach().mean().cpu()
         metrics[f"{prefix}logits/rejected"] = policy_rejected_logits.detach().mean().cpu()
         metrics[f"{prefix}logits/chosen"] = policy_chosen_logits.detach().mean().cpu()
+        metrics[f"{prefix}gamma"] = self.gamma
         for k, v in custom_metrics.items():
             metrics[f"{prefix}{k}"] = v
 
