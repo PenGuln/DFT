@@ -760,7 +760,7 @@ class DFTTrainer(Trainer):
         num_update_steps_per_epoch = max(len(train_dataset) // (args.gradient_accumulation_steps * args.train_batch_size * self.accelerator.state.num_processes) , 1)
         max_steps = math.ceil(args.num_train_epochs * num_update_steps_per_epoch)
         print("MAX_STEPS: ", max_steps)
-        self.gamma_scheduler = GammaScheduler(args.gamma, max_steps // 2)
+        self.gamma_scheduler = GammaScheduler(args.gamma, max_steps // 2, args.gradient_accumulation_steps)
 
         # only compute reference logps
         if self.precompute_offline_ref_log_probs:
