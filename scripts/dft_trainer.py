@@ -1168,7 +1168,9 @@ class DFTTrainer(Trainer):
             policy_rejected_size
         ) = forward_output[:7]
 
-
+        if self.args.sft:
+            return policy_nll_loss.mean(), metrics
+        
         policy_rejected_logps = policy_rejected_logps.view(self.samples_per_prompt, -1).transpose(0,1)
         policy_rejected_size = policy_rejected_size.view(self.samples_per_prompt, -1).transpose(0,1)
 

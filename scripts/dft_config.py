@@ -88,3 +88,4 @@ class DFTConfig(TrainingArguments):
     sample: bool = True
     precompute_offline_ref_log_probs : bool = False
     probs_dir: Optional[str] = None
+    sft : bool = False

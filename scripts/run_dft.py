@@ -117,20 +117,20 @@ def apply_chat_template(
     elif task == "dft":
         prompt_messages = example["real"][:-1]
         # Now we extract the final turn to define chosen/rejected responses
-        chosen_messages = example["real"][-1:]
+        chosen_messages = example["real"][:]
         rejected_messages_list = []
         for k in example.keys():
             if "generated" in k:
-                rejected_messages_list.append(example[k][-1:])
+                rejected_messages_list.append(example[k][:])
 
         # Prepend a system message if the first message is not a system message
         if auto_insert_empty_system_msg:
             maybe_insert_system_message(prompt_messages, tokenizer)
         
         example["text_prompt"] = tokenizer.apply_chat_template(prompt_messages, tokenize=False)
-        example["text_chosen"] = tokenizer.apply_chat_template(chosen_messages, tokenize=False)
+        example["text_chosen"] = tokenizer.apply_chat_template(chosen_messages, tokenize=False)[len(example["text_prompt"]):]
         for i, rejected_messages in enumerate(rejected_messages_list):
-            example[f"text_rejected_{i}"] = tokenizer.apply_chat_template(rejected_messages, tokenize=False)
+            example[f"text_rejected_{i}"] = tokenizer.apply_chat_template(rejected_messages, tokenize=False)[len(example["text_prompt"]):]
     else:
         raise ValueError(
             f"Task {task} not supported, please ensure that the provided task is one of ['sft', 'generation', 'rm', 'dpo', 'orpo', 'dft']"
@@ -241,7 +241,7 @@ def main():
         fn_kwargs={
             "tokenizer": tokenizer,
             "task": "dft",
-            "auto_insert_empty_system_msg": data_args.auto_insert_empty_system_msg,
+            "auto_insert_empty_system_msg": False,
         },
         num_proc=data_args.preprocessing_num_workers,
         remove_columns=column_names,
