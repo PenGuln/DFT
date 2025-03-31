@@ -170,7 +170,6 @@ class MyCallback(TrainerCallback):
             logger.info("Synchronizing u...")
             s = self.trainer.accelerator.reduce(self.trainer.u_mask, reduction = 'sum')
             self.trainer.u = self.trainer.accelerator.reduce(self.trainer.u * self.trainer.u_mask, reduction = 'sum') / s
-            self.trainer.u_mask[:] = 0
 
 def main():
     parser = H4ArgumentParser((ModelArguments, DataArguments, DFTConfig))
